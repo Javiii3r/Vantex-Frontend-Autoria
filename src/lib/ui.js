@@ -21,3 +21,44 @@ export function setText(id, texto) {
     }
 }
 
+export function setText(id, texto) {
+    const elemento = document.getElementById(id);
+    if (elemento !== null) {
+        elemento.textContent = texto;
+    }
+}
+
+export function askConfirm(title, message) {
+    return new Promise((resolve) => {
+        const overlay = document.createElement('div');
+        overlay.className = "fixed inset-0 z-[100] flex items-center justify-center p-4 bg-zinc-950/60 backdrop-blur-sm animate-in fade-in duration-200";
+        
+        overlay.innerHTML = `
+            <div class="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden border border-zinc-200 dark:border-zinc-800 scale-100 transition-transform">
+                <div class="p-6">
+                    <h3 class="text-lg font-bold text-zinc-900 dark:text-zinc-100 mb-2">${title}</h3>
+                    <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">${message}</p>
+                </div>
+                <div class="p-4 bg-zinc-50 dark:bg-zinc-800/50 border-t border-zinc-100 dark:border-zinc-800 flex gap-3 justify-end">
+                    <button id="btn-cancel-confirm" class="px-5 py-2 text-sm font-bold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors rounded-xl hover:bg-zinc-200 dark:hover:bg-zinc-800">Cancelar</button>
+                    <button id="btn-ok-confirm" class="px-5 py-2 text-sm font-bold bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md transition-all active:scale-95">Eliminar</button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(overlay);
+
+        const closeAndResolve = (result) => {
+            overlay.remove();
+            resolve(result);
+        };
+
+        overlay.querySelector('#btn-cancel-confirm').addEventListener('click', () => closeAndResolve(false));
+        overlay.querySelector('#btn-ok-confirm').addEventListener('click', () => closeAndResolve(true));
+        
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closeAndResolve(false);
+        });
+    });
+}
+
