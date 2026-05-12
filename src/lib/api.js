@@ -46,4 +46,30 @@ class ApiClient {
 
         return data;
     }
+
+    login = async (email, password) => {
+        return await this.request("/auth/login", "POST", { email: email, password: password });
+    }
+
+    register = async (userData) => {
+        return await this.request("/auth/register", "POST", userData);
+    }
+
+    updateProfile = async (data) => {
+        return await this.request("/auth/users/update/profile", "PUT", data);
+    }
+
+    getUsers = async () => {
+        return await this.request("/auth/users", "GET");
+    }
+
+    machines = {
+        getAll: async () => await this.request("/machines", "GET"),
+        create: async (data) => await this.request("/machines", "POST", data),
+        update: async (id, data) => await this.request("/machines/" + id, "PUT", data),
+        delete: async (id) => await this.request("/machines/" + id, "DELETE")
+    }
+
+
+
 }
