@@ -70,6 +70,30 @@ class ApiClient {
         delete: async (id) => await this.request("/machines/" + id, "DELETE")
     }
 
+     spareParts = {
+        getAll: async () => await this.request("/spare-parts", "GET"),
+        getLowStock: async () => await this.request("/spare-parts/stock/low", "GET"),
+        create: async (data) => await this.request("/spare-parts", "POST", data),
+        update: async (id, data) => await this.request("/spare-parts/" + id, "PUT", data),
+        delete: async (id) => await this.request("/spare-parts/" + id, "DELETE")
+    }
 
-
+    workOrders = {
+        getAll: async (filters = {}) => {
+            let endpoint = "/work-orders";
+            if (filters.status !== undefined || filters.search !== undefined) {
+                const params = new URLSearchParams(filters);
+                endpoint = endpoint + "?" + params.toString();
+            }
+            return await this.request(endpoint, "GET");
+        },
+        create: async (data) => await this.request("/work-orders", "POST", data),
+        update: async (id, data) => await this.request("/work-orders/" + id, "PUT", data),
+        start: async (id) => await this.request("/work-orders/" + id + "/start", "PUT"),
+        close: async (id, data) => await this.request("/work-orders/" + id + "/close", "PUT", data),
+        delete: async (id) => await this.request("/work-orders/" + id, "DELETE")
+    }
 }
+
+export const api = new ApiClient();
+export default api;
