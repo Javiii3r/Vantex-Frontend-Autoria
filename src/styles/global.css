@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Configuración para forzar Dark/Light Mode manual por clases (Tailwind v4) */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   /* You can add custom theme tokens here for Tailwind v4 */
 }
