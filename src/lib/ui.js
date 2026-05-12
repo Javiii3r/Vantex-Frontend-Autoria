@@ -62,3 +62,34 @@ export function askConfirm(title, message) {
     });
 }
 
+export function applyRoleProtections(user) {
+    if (user === null) return;
+
+    if (user.role === 'technician') {
+        const elementosAdmin = document.querySelectorAll('.admin-only');
+        elementosAdmin.forEach(function(elemento) {
+            elemento.remove();
+        });
+    }
+}
+
+export function setupUserUI(user) {
+    if (user === null) return;
+    
+    let inicial = "U";
+    if (user.full_name !== undefined && user.full_name !== "") {
+        inicial = user.full_name.charAt(0).toUpperCase();
+    }
+    
+    const nombreRol = ROLE_LABELS[user.role] || user.role;
+
+    // Cabecera
+    setText('header-name', user.full_name);
+    setText('header-avatar', inicial);
+    setText('header-role', nombreRol);
+
+    // Sidebar
+    setText('user-name', user.full_name);
+    setText('user-avatar', inicial);
+    setText('user-role', nombreRol);
+}
