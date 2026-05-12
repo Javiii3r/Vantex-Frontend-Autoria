@@ -1,30 +1,117 @@
 ---
-import '../styles/global.css';
+import "../styles/global.css";
+import Sidebar from "../components/Sidebar.astro";
 
 interface Props {
-	title: string;
+    title: string;
+    showSidebar?: boolean;
 }
 
-const { title } = Astro.props;
+const { title, showSidebar = true } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="es">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="description" content="VantexCorp - Sistema GMAO" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>{title} | VantexCorp</title>
-	</head>
-	<body class="bg-zinc-950 text-white min-h-screen flex overflow-hidden font-sans antialiased selection:bg-purple-500/30">
-		<!-- Efectos de iluminación de fondo tipo Glassmorphism (guardando tu estilo) -->
-		<div class="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
-		<div class="fixed -bottom-32 -right-32 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
-		
-		<main class="flex-1 w-full h-full overflow-y-auto relative z-10 flex flex-col">
-			<slot />
-		</main>
-	</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="description" content="VantexCorp - Sistema GMAO" />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" type="image/png" href="/vvVantex.png" />
+        <meta name="generator" content={Astro.generator} />
+        <title>{title} | VantexCorp</title>
+
+        <script is:inline>
+            (function () {
+                // 1. Gestión de Tema
+                const theme =
+                    localStorage.getItem("theme") ||
+                    (window.matchMedia("(prefers-color-scheme: dark)").matches
+                        ? "dark"
+                        : "light");
+                if (theme === "dark")
+                    document.documentElement.classList.add("dark");
+
+                try {
+                    const userStr =
+                        localStorage.getItem("user") ||
+                        sessionStorage.getItem("user");
+                    if (userStr) {
+                        const user = JSON.parse(userStr);
+                        if (user.role === "technician") {
+                            document.documentElement.classList.add(
+                                "role-technician",
+                            );
+                        }
+                    }
+                } catch (e) {}
+            })();
+        </script>
+        <style is:inline>
+            html.role-technician .admin-only {
+                display: none !important;
+            }
+        </style>
+    </head>
+    <body
+        class="bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 h-screen flex flex-col md:flex-row font-sans antialiased selection:bg-yellow-500/30 overflow-hidden relative"
+    >
+        {showSidebar && <Sidebar />}
+
+        <div
+            class="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] bg-yellow-500/20 rounded-full blur-[120px] -z-10 pointer-events-none"
+        >
+        </div>
+        <div
+            class="fixed -bottom-32 -right-32 w-[600px] h-[600px] bg-zinc-400/30 rounded-full blur-[120px] -z-10 pointer-events-none"
+        >
+        </div>
+
+        <main
+            class="flex-1 w-full overflow-y-auto relative z-10 flex flex-col pb-16 md:pb-0"
+        >
+            <slot />
+        </main>
+
+        <div
+            id="page-loader"
+            class="fixed inset-0 z-[100] hidden bg-zinc-100/90 dark:bg-zinc-950/90 flex flex-col items-center justify-center transition-opacity duration-200"
+        >
+            <div
+                class="w-12 h-12 border-4 border-zinc-200 dark:border-zinc-800 border-t-yellow-500 rounded-full animate-spin shadow-lg"
+            >
+            </div>
+            <p
+                class="mt-4 text-sm font-bold text-zinc-600 dark:text-zinc-400 animate-pulse"
+            >
+                Cargando...
+            </p>
+        </div>
+
+        <script>
+            window.addEventListener("pageshow", (event) => {
+                if (event.persisted) {
+                    document
+                        .getElementById("page-loader")
+                        ?.classList.add("hidden");
+                }
+            });
+
+            document.addEventListener("click", (e) => {
+                const link = (e.target as HTMLElement).closest("a");
+
+                if (
+                    link &&
+                    link.href &&
+                    link.host === window.location.host &&
+                    !link.target
+                ) {
+                    if (link.pathname !== window.location.pathname) {
+                        document
+                            .getElementById("page-loader")
+                            ?.classList.remove("hidden");
+                    }
+                }
+            });
+        </script>
+    </body>
 </html>
