@@ -1,0 +1,120 @@
+---
+---
+
+<div id="vantex-splash" class="fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-[#0d0d0d] transition-opacity duration-500 overflow-hidden" style="display: none;">
+  
+  <div class="absolute top-1/4 left-1/4 w-[30rem] h-[30rem] bg-yellow-500/10 rounded-full blur-[100px] bg-anim mix-blend-screen"></div>
+  <div class="absolute bottom-1/4 right-1/4 w-[40rem] h-[40rem] bg-zinc-500/10 rounded-full blur-[100px] bg-anim-reverse mix-blend-screen"></div>
+  <div class="flex flex-col items-center relative z-10">
+    
+    <div class="logo-container mb-6">
+      <img src="/vvVantex.png" alt="Vantex Logo" class="w-32 h-32 object-contain drop-shadow-2xl" />
+    </div>
+
+    <div class="text-container flex items-center justify-center overflow-hidden">
+      <span class="letter">V</span>
+      <span class="letter">A</span>
+      <span class="letter">N</span>
+      <span class="letter">T</span>
+      <span class="letter">E</span>
+      <span class="letter">X</span>
+    </div>
+    
+  </div>
+</div>
+
+<style>
+
+  @keyframes bgMove {
+    0% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -50px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+    100% { transform: translate(0, 0) scale(1); }
+  }
+
+  @keyframes logoReveal {
+    0% { opacity: 0; transform: scale(0.8) translateY(20px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  @keyframes letterReveal {
+    0% { opacity: 0; transform: translateY(40px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  .bg-anim { animation: bgMove 8s infinite alternate ease-in-out; }
+  .bg-anim-reverse { animation: bgMove 10s infinite alternate-reverse ease-in-out; }
+
+  .logo-container {
+    opacity: 0;
+    animation: logoReveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .text-container {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: 0.5rem;
+    color: #ffffff;
+    background: linear-gradient(to right, #ffffff, #a1a1aa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .letter {
+    display: inline-block;
+    opacity: 0;
+    animation: letterReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .letter:nth-child(1) { animation-delay: 0.4s; }
+  .letter:nth-child(2) { animation-delay: 0.5s; }
+  .letter:nth-child(3) { animation-delay: 0.6s; }
+  .letter:nth-child(4) { animation-delay: 0.7s; }
+  .letter:nth-child(5) { animation-delay: 0.8s; }
+  .letter:nth-child(6) { animation-delay: 0.9s; }
+
+  .splash-hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+</style>
+
+<script is:inline>
+  const splash = document.getElementById('vantex-splash');
+  
+  if (sessionStorage.getItem('justLoggedIn') && splash) {
+    splash.style.display = 'flex'; 
+
+    const MIN_SPLASH_TIME = 1800; 
+    const startTime = Date.now();
+
+    function hideSplashScreen() {
+      if (!splash) return;
+
+      const elapsedTime = Date.now() - startTime;
+      const remainingTime = Math.max(0, MIN_SPLASH_TIME - elapsedTime);
+
+      setTimeout(() => {
+        splash.classList.add('splash-hidden');
+        
+        setTimeout(() => {
+          splash.remove();
+        }, 500); 
+
+      }, remainingTime);
+    }
+
+    if (document.readyState === 'complete') {
+      hideSplashScreen();
+    } else {
+      window.addEventListener('load', hideSplashScreen);
+    }
+  } else if (splash) {
+    splash.remove();
+  }
+
+  document.addEventListener('astro:after-swap', () => {
+      const s = document.getElementById('vantex-splash');
+      if (s) s.remove();
+  });
+</script>

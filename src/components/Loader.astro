@@ -1,0 +1,54 @@
+<div id="global-loader" class="fixed inset-0 z-[9999] flex items-center justify-center bg-zinc-50/80 backdrop-blur-sm transition-opacity duration-300">
+    <div class="flex flex-col items-center relative">
+        <div class="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-20 bg-yellow-500/60 rounded-full blur-[32px] animate-pulse pointer-events-none"></div>
+
+        <img src="/vvVantex.png" alt="Vantex" class="w-24 h-24 object-contain animate-pulse drop-shadow-lg relative z-10" />
+        <p class="mt-4 text-zinc-700 font-bold animate-pulse text-lg tracking-widest uppercase relative z-10">LOADING...</p>
+    </div>
+</div>
+
+<script is:inline>
+    const skipLoader = sessionStorage.getItem('skipLoader') === 'true';
+    if (skipLoader) {
+        const initialLoader = document.getElementById('global-loader');
+        if (initialLoader) initialLoader.style.display = 'none';
+        sessionStorage.removeItem('skipLoader');
+    }
+
+    window.loaderShowTime = 0;
+
+    window.showLoader = () => {
+        const loader = document.getElementById('global-loader');
+        if (loader) {
+            window.loaderShowTime = Date.now();
+            loader.style.display = 'flex';
+            setTimeout(() => loader.style.opacity = '1', 10);
+        }
+    };
+
+    window.hideLoader = () => {
+        const loader = document.getElementById('global-loader');
+        if (loader) {
+            const timeElapsed = Date.now() - (window.loaderShowTime || Date.now());
+            const minDuration = window.loaderMinDuration || 500; 
+            const remainingTime = Math.max(0, minDuration - timeElapsed);
+
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none'; 
+                    window.loaderMinDuration = 50; 
+                }, 300);
+            }, remainingTime);
+        }
+    };
+
+    if (document.readyState === 'complete') {
+        window.hideLoader();
+    } else {
+        window.addEventListener('load', window.hideLoader);
+    }
+
+    document.addEventListener('astro:before-preparation', window.showLoader);
+    document.addEventListener('astro:after-swap', window.hideLoader);
+</script>
