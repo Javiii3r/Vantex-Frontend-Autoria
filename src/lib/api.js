@@ -36,7 +36,7 @@ class ApiClient {
                 clearAuthData();
                 window.location.href = "/login";
             }
-            let errorMsg = "Error en la petición";
+            let errorMsg = "Request error";
             if (data !== null && data.message) errorMsg = data.message;
             if (data !== null && data.error) errorMsg = data.error;
             

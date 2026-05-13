@@ -2,14 +2,19 @@ import Toastify from 'toastify-js';
 import 'toastify-js/src/toastify.css';
 import { ROLE_LABELS } from './auth.js';
 
+const isMobile = () => typeof window !== 'undefined' && window.innerWidth < 768;
+
 export const notify = {
     success: (mensaje) => {
+        if (isMobile()) return;
         Toastify({ text: mensaje, duration: 3000, style: { background: '#22c55e' } }).showToast();
     },
     error: (mensaje) => {
+        if (isMobile()) return;
         Toastify({ text: mensaje, duration: 4000, style: { background: '#ef4444' } }).showToast();
     },
     info: (mensaje) => {
+        if (isMobile()) return;
         Toastify({ text: mensaje, duration: 3000, style: { background: '#eab308', color: '#000' } }).showToast();
     }
 };
@@ -21,17 +26,12 @@ export function setText(id, texto) {
     }
 }
 
-export function setText(id, texto) {
-    const elemento = document.getElementById(id);
-    if (elemento !== null) {
-        elemento.textContent = texto;
-    }
-}
+
 
 export function askConfirm(title, message) {
     return new Promise((resolve) => {
         const overlay = document.createElement('div');
-        overlay.className = "fixed inset-0 z-[100] flex items-center justify-center p-4 bg-zinc-950/60 backdrop-blur-sm animate-in fade-in duration-200";
+        overlay.className = "fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 animate-in fade-in duration-200";
         
         overlay.innerHTML = `
             <div class="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden border border-zinc-200 dark:border-zinc-800 scale-100 transition-transform">
@@ -40,8 +40,8 @@ export function askConfirm(title, message) {
                     <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">${message}</p>
                 </div>
                 <div class="p-4 bg-zinc-50 dark:bg-zinc-800/50 border-t border-zinc-100 dark:border-zinc-800 flex gap-3 justify-end">
-                    <button id="btn-cancel-confirm" class="px-5 py-2 text-sm font-bold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors rounded-xl hover:bg-zinc-200 dark:hover:bg-zinc-800">Cancelar</button>
-                    <button id="btn-ok-confirm" class="px-5 py-2 text-sm font-bold bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md transition-all active:scale-95">Eliminar</button>
+                    <button id="btn-cancel-confirm" class="px-5 py-2 text-sm font-bold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors rounded-xl hover:bg-zinc-200 dark:hover:bg-zinc-800">Cancel</button>
+                    <button id="btn-ok-confirm" class="px-5 py-2 text-sm font-bold bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md transition-all active:scale-95">Delete</button>
                 </div>
             </div>
         `;
