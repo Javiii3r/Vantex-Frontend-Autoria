@@ -60,7 +60,7 @@ export function redirectIfAuthenticated(targetUrl = "/dashboard") {
 }
 
 export const ROLE_LABELS = {
-    admin: 'Administrador',
-    maintenance_manager: 'Jefe de Mantenimiento',
-    technician: 'Técnico',
+    admin: 'Administrator',
+    maintenance_manager: 'Maintenance Manager',
+    technician: 'Technician',
 };
