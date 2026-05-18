@@ -1,0 +1,33 @@
+---
+interface Props {
+  badge: string;
+  title: string;
+  titleAccent: string;
+  description: string;
+}
+const { badge, title, titleAccent, description } = Astro.props;
+---
+
+<div class="hidden lg:flex lg:w-7/12 relative bg-zinc-900 overflow-hidden items-center justify-center">
+  <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-size-[40px_40px]"></div>
+  
+  <div class="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 w-[800px] h-[800px] bg-yellow-500/20 rounded-full blur-[150px] mix-blend-screen pointer-events-none"></div>
+
+  <img src="/vvVantex.png" alt="VantexCorp Watermark" class="absolute -right-24 -bottom-24 w-[900px] h-[900px] object-contain opacity-20 select-none pointer-events-none drop-shadow-2xl" />
+
+  <div class="relative z-10 px-16 max-w-2xl">
+    <div class="inline-flex items-center gap-3 mb-6 bg-white/10 backdrop-blur-md border border-white/10 rounded-full px-4 py-2 text-yellow-500 text-sm font-semibold tracking-wide uppercase">
+      <span class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse shadow-[0_0_10px_rgba(234,179,8,0.8)]"></span>
+      {badge}
+    </div>
+    <h2 class="text-5xl font-bold text-white mb-6 leading-tight drop-shadow-md">
+      {title} <br />
+      <span class="text-transparent bg-clip-text bg-linear-to-r from-yellow-400 to-yellow-600">
+        {titleAccent}
+      </span>
+    </h2>
+    <p class="text-lg text-zinc-400 leading-relaxed max-w-xl">
+      {description}
+    </p>
+  </div>
+</div>

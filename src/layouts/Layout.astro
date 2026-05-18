@@ -1,0 +1,89 @@
+---
+// src/layouts/Layout.astro
+import "../styles/global.css";
+import Sidebar from "../components/Sidebar.astro";
+import Loader from "../components/Loader.astro";
+import SplashScreen from "../components/SplashScreen.astro";
+
+interface Props {
+    title: string;
+    showSidebar?: boolean;
+}
+
+const { title, showSidebar = true } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="description" content="VantexCorp - GMAO System" />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" type="image/png" href="/vvVantex.png" />
+        <meta name="generator" content={Astro.generator} />
+        <title>{title} | VantexCorp</title>
+
+        <script is:inline>
+            (function () {
+                const theme = localStorage.getItem("theme") || 
+                    (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+                
+                if (theme === "dark") document.documentElement.classList.add("dark");
+
+                try {
+                    const userStr = localStorage.getItem("user") || sessionStorage.getItem("user");
+                    if (userStr) {
+                        const user = JSON.parse(userStr);
+                        if (user.role === "technician") {
+                            document.documentElement.classList.add("role-technician");
+                        }
+                    }
+                } catch (e) {}
+            })();
+        </script>
+
+        <style is:inline>
+            html.role-technician .admin-only {
+                display: none !important;
+            }
+        </style>
+    </head>
+
+    <body class="bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 h-screen flex flex-col md:flex-row font-sans antialiased overflow-hidden relative selection:bg-yellow-500/30">
+        
+        <SplashScreen />
+        <Loader />
+
+        {showSidebar && <Sidebar />}
+
+        <div class="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] bg-yellow-500/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+        <div class="fixed -bottom-32 -right-32 w-[600px] h-[600px] bg-zinc-400/30 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+
+        <main class="flex-1 w-full overflow-y-auto relative z-10 flex flex-col pb-16 md:pb-0">
+            <slot />
+        </main>
+
+        <script>
+            declare global {
+                interface Window {
+                    showLoader: () => void;
+                    hideLoader: () => void;
+                }
+            }
+
+            window.addEventListener("pageshow", (event) => {
+                if (event.persisted && window.hideLoader) window.hideLoader();
+            });
+
+            document.addEventListener("click", (e) => {
+                const link = (e.target as HTMLElement).closest("a");
+                
+                if (link && link.href && link.host === window.location.host && !link.target) {
+                    if (link.pathname !== window.location.pathname && window.showLoader) {
+                        window.showLoader();
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
