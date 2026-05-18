@@ -1,0 +1,284 @@
+---
+// src/pages/ordenes.astro
+import Layout from "../layouts/Layout.astro";
+import PageHeader from "../components/PageHeader.astro";
+import { Icon } from "astro-icon/components";
+---
+
+<Layout title="Work Orders">
+    <PageHeader
+        title="Work Orders"
+        subtitle="Maintenance management and tracking"/>
+
+    <main class="p-6 md:p-8 space-y-6 max-w-7xl mx-auto w-full">
+        <div
+            class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="flex flex-col sm:flex-row gap-3 flex-1">
+                <div class="relative flex-1 max-w-md">
+                    <Icon
+                        name="lucide:search"
+                        class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500"/>
+                    <input
+                        type="text"
+                        id="search-input"
+                        placeholder="Search by code or description..."
+                        class="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm dark:text-zinc-100 focus:ring-2 focus:ring-yellow-500 outline-none transition-all placeholder:text-zinc-400 dark:placeholder:text-zinc-600"/>
+                </div>
+                <select
+                    id="filter-status"
+                    class="px-4 py-2.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm dark:text-zinc-100 focus:ring-2 focus:ring-yellow-500 outline-none transition-all">
+                    <option value="">All statuses</option>
+                    <option value="open">Pending</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="closed">Completed</option>
+                </select>
+            </div>
+
+            <button
+                id="btn-new-order"
+                class="admin-only bg-yellow-500 hover:bg-yellow-400 text-zinc-950 font-bold py-2.5 px-6 rounded-xl transition-all shadow-lg shadow-yellow-500/20 active:scale-95">
+                + New Order
+            </button>
+        </div>
+
+        <div
+            class="md:bg-white md:dark:bg-zinc-900 md:rounded-2xl md:border md:border-zinc-200 md:dark:border-zinc-800 md:shadow-sm overflow-hidden">
+            <div
+                class="hidden md:grid grid-cols-12 gap-4 p-4 border-b border-zinc-100 dark:border-zinc-800 font-bold text-[10px] uppercase text-zinc-500 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-900/50 tracking-wider">
+                
+                <div class="col-span-1 pl-2">Code</div>
+                <div class="col-span-2">Machine</div>
+                <div class="col-span-3">Description</div>
+                <div class="col-span-2">Status</div>
+                <div class="col-span-1">Technician</div>
+                <div class="col-span-3 text-right pr-2">Actions</div>
+            </div>
+            <div
+                id="orders-list"
+                class="space-y-4 md:space-y-0 md:divide-y md:divide-zinc-100 dark:md:divide-zinc-800">
+                <div class="p-8 text-center text-zinc-500 dark:text-zinc-400">
+                    Loading orders...
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div
+        id="modal-new-order"
+        class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/60">
+        <div
+            class="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div
+                class="p-6 border-b border-zinc-100 dark:border-zinc-800 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-zinc-900 dark:text-zinc-100">
+                    Register Issue
+                </h3>
+                <button
+                    type="button"
+                    onclick="document.getElementById('modal-new-order').classList.add('hidden')"
+                    class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300">
+                    <Icon name="lucide:x" class="w-6 h-6" />
+                </button>
+            </div>
+            <form id="form-new-order" class="p-6 space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label
+                            class="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase mb-1">Affected Machine</label>
+                        <select
+                            name="machine_id"
+                            id="machine_id"
+                            required
+                            class="w-full px-4 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 text-sm bg-white dark:bg-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-yellow-500">
+                        </select>
+                    </div>
+                    <div>
+                        <label
+                            class="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase mb-1">Assigned Technician</label>
+                        <select
+                            name="technician_id"
+                            id="technician_id"
+                            class="w-full px-4 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 text-sm bg-white dark:bg-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-yellow-500">
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label
+                        class="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase mb-1">Problem Description</label>
+                    <textarea
+                        name="issue_description"
+                        required
+                        rows="3"
+                        class="w-full px-4 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 text-sm bg-white dark:bg-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-yellow-500"
+                        placeholder="E.g.: The main motor is making a strange noise...">
+                    </textarea>
+                </div>
+                <button
+                    type="submit"
+                    class="w-full bg-zinc-900 dark:bg-yellow-500 text-white dark:text-zinc-950 font-bold py-3 rounded-xl hover:bg-zinc-800 dark:hover:bg-yellow-400 transition-all shadow-lg">
+                    Create Work Order
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div
+        id="modal-close-order"
+        class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/60">
+        <div
+            class="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-lg flex flex-col max-h-[90vh] overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div
+                class="p-6 border-b border-zinc-100 dark:border-zinc-800 shrink-0 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-zinc-900 dark:text-zinc-100">
+                    Close Order
+                </h3>
+                <button
+                    type="button"
+                    onclick="window.closeModalAndStopScanner()"
+                    class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300">
+                    <Icon name="lucide:x" class="w-6 h-6" />
+                </button>
+            </div>
+            <form id="form-close-order" class="p-6 space-y-4 overflow-y-auto">
+                <input type="hidden" name="id" id="close-order-id" />
+                <div>
+                    <label
+                        class="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase mb-1">Resolution / Comments</label>
+                    <textarea
+                        name="resolution_comment"
+                        required
+                        rows="3"
+                        class="w-full px-4 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 text-sm bg-white dark:bg-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-yellow-500"
+                        placeholder="Explain what has been repaired..."></textarea>
+                </div>
+
+                <div
+                    class="p-4 bg-zinc-50 dark:bg-zinc-800/30 rounded-xl border border-zinc-100 dark:border-zinc-800 space-y-3">
+                    <label
+                        class="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase">
+                        Used Spare Parts (Optional)</label>
+                    <div
+                        class="grid grid-cols-1 sm:grid-cols-[1fr_auto_auto_auto] gap-2 items-start">
+                        <select
+                            id="part-select"
+                            class="w-full px-4 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 text-sm bg-white dark:bg-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-yellow-500 min-w-0">
+                            <option value="">Select spare part...</option>
+                        </select>
+                        <input
+                            type="number"
+                            id="part-qty"
+                            min="1"
+                            value="1"
+                            class="w-full sm:w-20 px-4 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 text-sm bg-white dark:bg-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-yellow-500"
+                            placeholder="Qty."/>
+                        <button
+                            type="button"
+                            id="btn-add-part"
+                            class="w-full sm:w-auto bg-zinc-900 dark:bg-yellow-500 hover:bg-zinc-800 dark:hover:bg-yellow-400 text-white dark:text-zinc-950 px-4 py-2 rounded-lg font-bold transition-all shadow-sm">
+                            Add
+                        </button>
+                        <button
+                            type="button"
+                            id="btn-scan-qr"
+                            title="Scan QR code"
+                            class="w-full sm:w-auto bg-zinc-700 hover:bg-zinc-600 text-white px-4 py-2 rounded-lg font-bold transition-all shadow-sm flex items-center justify-center">
+                            <Icon name="lucide:camera" class="w-5 h-5" />
+                        </button>
+                    </div>
+                    <div id="qr-scanner-container" class="hidden mt-2 rounded-xl overflow-hidden relative">
+                        <button type="button" id="btn-stop-scan" class="absolute top-2 right-2 z-10 bg-black/60 hover:bg-black/80 text-white rounded-full w-8 h-8 flex items-center justify-center transition-all shadow-lg">
+                            <Icon name="lucide:x" class="w-5 h-5" />
+                        </button>
+                    </div>
+                    <ul id="parts-list" class="space-y-2 empty:hidden mt-2">
+                    </ul>
+                </div>
+
+                <button
+                    type="submit"
+                    class="w-full bg-green-600 text-white font-bold py-3 rounded-xl hover:bg-green-700 transition-all shadow-lg">
+                    Finish and Save
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div
+        id="modal-edit-order"
+        class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/60">
+        <div
+            class="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div
+                class="p-6 border-b border-zinc-100 dark:border-zinc-800 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-zinc-900 dark:text-zinc-100">
+                    Edit Order
+                </h3>
+                <button
+                    type="button"
+                    onclick="document.getElementById('modal-edit-order').classList.add('hidden')"
+                    class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300">
+                    <Icon name="lucide:x" class="w-6 h-6" />
+                </button>
+            </div>
+            <form id="form-edit-order" class="p-6 space-y-4">
+                <input type="hidden" name="id" id="edit-order-id" />
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label
+                            class="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase mb-1">Affected Machine</label>
+                        <select
+                            name="machine_id"
+                            id="edit_machine_id"
+                            required
+                            class="w-full px-4 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 text-sm bg-white dark:bg-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-yellow-500"></select>
+                    </div>
+                    <div>
+                        <label
+                            class="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase mb-1">
+                            Assigned Technician</label>
+                        <select
+                            name="technician_id"
+                            id="edit_technician_id"
+                            class="w-full px-4 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 text-sm bg-white dark:bg-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-yellow-500">
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label
+                        class="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase mb-1">Problem Description</label>
+                    <textarea
+                        name="issue_description"
+                        id="edit_issue_description"
+                        required
+                        rows="3"
+                        class="w-full px-4 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 text-sm bg-white dark:bg-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-yellow-500"
+                        placeholder="E.g.: The main motor is making a strange noise..."></textarea>
+                </div>
+                <div
+                    class="p-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700 rounded-lg text-xs text-zinc-500 dark:text-zinc-400">
+                    <strong>Note:</strong> Order status cannot be modified manually
+                    for security reasons. Use "Start" or "Finish" actions.
+                </div>
+                <button
+                    type="submit"
+                    class="w-full bg-zinc-900 dark:bg-yellow-500 text-white dark:text-zinc-950 font-bold py-3 rounded-xl hover:bg-zinc-800 dark:hover:bg-yellow-400 transition-all shadow-lg">
+                    Save Changes
+                </button>
+            </form>
+        </div>
+    </div>
+</Layout>
+
+<script>
+    import { redirectIfNotAuthenticated, getUser } from "../lib/auth.js";
+    import { setupUserUI, applyRoleProtections } from "../lib/ui.js";
+    import { initOrdersView } from "../views/ordenes.view.js";
+
+    redirectIfNotAuthenticated();
+
+    const user = getUser();
+    setupUserUI(user);
+    applyRoleProtections(user);
+
+    initOrdersView();
+</script>
