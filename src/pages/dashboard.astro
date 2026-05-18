@@ -1,0 +1,108 @@
+---
+// src/pages/dashboard.astro
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { Icon } from 'astro-icon/components';
+---
+
+<Layout title="Control Panel">
+    <PageHeader 
+        title="Dashboard" 
+        subtitle="General CMMS system overview" 
+        showDate={true} />
+
+    <main class="p-6 md:p-8 space-y-8 max-w-7xl mx-auto w-full">
+        
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-200 dark:border-yellow-900/50 rounded-xl p-6 shadow-sm">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-lg bg-yellow-500/20 flex items-center justify-center text-yellow-600">
+                        <Icon name="lucide:clock" class="w-6 h-6" />
+                    </div>
+                    <div>
+                        <p class="text-sm text-yellow-800 dark:text-yellow-500 font-medium">Pending</p>
+                        <p class="text-2xl font-bold text-yellow-900 dark:text-yellow-100" id="stat-pending">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-900/50 rounded-xl p-6 shadow-sm">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-600">
+                        <Icon name="lucide:zap" class="w-6 h-6" />
+                    </div>
+                    <div>
+                        <p class="text-sm text-blue-800 dark:text-blue-500 font-medium">In Progress</p>
+                        <p class="text-2xl font-bold text-blue-900 dark:text-blue-100" id="stat-progress">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-green-50 dark:bg-green-900/10 border border-green-200 dark:border-green-900/50 rounded-xl p-6 shadow-sm">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-lg bg-green-500/20 flex items-center justify-center text-green-600">
+                        <Icon name="lucide:cpu" class="w-6 h-6" />
+                    </div>
+                    <div>
+                        <p class="text-sm text-green-800 dark:text-green-500 font-medium">Machinery OK</p>
+                        <p class="text-2xl font-bold text-green-900 dark:text-green-100" id="stat-machines">0 / 0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/50 rounded-xl p-6 shadow-sm">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-lg bg-red-500/20 flex items-center justify-center text-red-600">
+                        <Icon name="lucide:package" class="w-6 h-6" />
+                    </div>
+                    <div>
+                        <p class="text-sm text-red-800 dark:text-red-500 font-medium">Low Stock</p>
+                        <p class="text-2xl font-bold text-red-900 dark:text-red-100" id="stat-lowstock">0</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="max-md:space-y-4 md:bg-white md:dark:bg-zinc-900 md:border md:border-zinc-200 md:dark:border-zinc-800 md:rounded-2xl md:shadow-sm md:overflow-hidden">
+            <div class="px-6 py-5 md:border-b md:border-zinc-100 dark:md:border-zinc-800 flex items-center justify-between bg-transparent md:bg-zinc-50/50 dark:md:bg-zinc-800/30 rounded-2xl md:rounded-none">
+                <div>
+                    <h2 class="text-lg font-bold text-zinc-900 dark:text-zinc-100">Recent Activity</h2>
+                    <p class="text-sm text-zinc-500 dark:text-zinc-400" id="wo-count">Loading orders...</p>
+                </div>
+                <a href="/ordenes" class="text-sm font-bold text-yellow-600 hover:text-yellow-700 transition-colors">
+                    View all &rarr;
+                </a>
+            </div>
+
+            <div class="hidden md:grid grid-cols-12 gap-4 p-4 border-b border-zinc-100 dark:border-zinc-800 font-bold text-[10px] uppercase text-zinc-400 tracking-wider bg-white dark:bg-zinc-900">
+                <div class="col-span-1 pl-2">Code</div>
+                <div class="col-span-2">Machine</div>
+                <div class="col-span-3">Description</div>
+                <div class="col-span-2">Status</div>
+                <div class="col-span-4">Technician</div>
+            </div>
+            
+            <div id="wo-table-body" class="space-y-4 md:space-y-0 md:divide-y md:divide-zinc-100 dark:md:divide-zinc-800">
+                <div class="p-8 text-center text-zinc-500 dark:text-zinc-400">Loading orders...</div>
+            </div>
+        </section>
+
+    </main>
+</Layout>
+
+<script>
+    import { redirectIfNotAuthenticated, getUser } from '../lib/auth.js';
+    import { setupUserUI, applyRoleProtections } from '../lib/ui.js';
+    import { initDashboardView } from '../views/dashboard.view.js';
+
+    // 1. Seguridad
+    redirectIfNotAuthenticated();
+
+    // 2. Cargar UI Base común
+    const user = getUser();
+    setupUserUI(user);
+    applyRoleProtections(user);
+
+    // 3. Inicializar Dashboard
+    initDashboardView();
+</script>
