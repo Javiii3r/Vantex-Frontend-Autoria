@@ -1,23 +1,13 @@
 export function isAuthenticated() {
     if (typeof window === "undefined") return false;
-
     const token = localStorage.getItem("token");
-    if (token !== null && token !== "") {
-        return true;
-    } else {
-        return false;
-    }
+    return token !== null && token !== "";
 }
 
 export function getUser() {
     if (typeof window === "undefined") return null;
-    
     const userString = localStorage.getItem("user");
-    if (userString !== null) {
-        return JSON.parse(userString);
-    } else {
-        return null;
-    }
+    return userString !== null ? JSON.parse(userString) : null;
 }
 
 export function setAuthData(user, token) {
@@ -36,11 +26,7 @@ export function clearAuthData() {
 
 export function getUserRole() {
     const user = getUser();
-    if (user !== null) {
-        return user.role;
-    } else {
-        return null;
-    }
+    return user !== null ? user.role : null;
 }
 
 export function redirectIfNotAuthenticated(targetUrl = "/login") {
