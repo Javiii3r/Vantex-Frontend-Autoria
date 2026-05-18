@@ -2,20 +2,42 @@ import Toastify from 'toastify-js';
 import 'toastify-js/src/toastify.css';
 import { ROLE_LABELS } from './auth.js';
 
-const isMobile = () => typeof window !== 'undefined' && window.innerWidth < 768;
+const commonToastStyle = {
+    borderRadius: '12px',
+    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+    padding: '12px 24px',
+    fontWeight: '500',
+    fontSize: '14px',
+    border: '1px solid rgba(255, 255, 255, 0.2)'
+};
 
 export const notify = {
     success: (mensaje) => {
-        if (isMobile()) return;
-        Toastify({ text: mensaje, duration: 3000, style: { background: '#22c55e' } }).showToast();
+        Toastify({ 
+            text: mensaje, 
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            style: { background: '#22c55e', color: '#fff', ...commonToastStyle } 
+        }).showToast();
     },
     error: (mensaje) => {
-        if (isMobile()) return;
-        Toastify({ text: mensaje, duration: 4000, style: { background: '#ef4444' } }).showToast();
+        Toastify({ 
+            text: mensaje, 
+            duration: 4000,
+            gravity: "top",
+            position: "right",
+            style: { background: '#ef4444', color: '#fff', ...commonToastStyle } 
+        }).showToast();
     },
     info: (mensaje) => {
-        if (isMobile()) return;
-        Toastify({ text: mensaje, duration: 3000, style: { background: '#eab308', color: '#000' } }).showToast();
+        Toastify({ 
+            text: mensaje, 
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            style: { background: '#eab308', color: '#000', ...commonToastStyle } 
+        }).showToast();
     }
 };
 
