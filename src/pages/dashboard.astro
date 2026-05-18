@@ -95,14 +95,11 @@ import { Icon } from 'astro-icon/components';
     import { setupUserUI, applyRoleProtections } from '../lib/ui.js';
     import { initDashboardView } from '../views/dashboard.view.js';
 
-    // 1. Seguridad
     redirectIfNotAuthenticated();
 
-    // 2. Cargar UI Base común
     const user = getUser();
     setupUserUI(user);
     applyRoleProtections(user);
 
-    // 3. Inicializar Dashboard
     initDashboardView();
 </script>
