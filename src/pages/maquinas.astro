@@ -1,0 +1,101 @@
+---
+// src/pages/maquinas.astro
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { Icon } from 'astro-icon/components';
+---
+
+<Layout title="Machine Inventory">
+    <PageHeader 
+        title="Asset Management" 
+        subtitle="Control and status of the machinery fleet"/>
+
+    <main class="p-6 md:p-8 space-y-6 max-w-7xl mx-auto w-full">
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
+                <p class="text-xs text-zinc-500 dark:text-zinc-400 uppercase font-semibold">Total</p>
+                <p class="text-2xl font-bold text-zinc-900 dark:text-zinc-100" id="stat-total">0</p>
+            </div>
+            <div class="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
+                <p class="text-xs text-green-600 dark:text-green-500 uppercase font-semibold">Operational</p>
+                <p class="text-2xl font-bold text-zinc-900 dark:text-zinc-100" id="stat-operational">0</p>
+            </div>
+            <div class="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
+                <p class="text-xs text-yellow-600 dark:text-yellow-500 uppercase font-semibold">In Maintenance</p>
+                <p class="text-2xl font-bold text-zinc-900 dark:text-zinc-100" id="stat-maintenance">0</p>
+            </div>
+            <div class="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
+                <p class="text-xs text-red-600 dark:text-red-500 uppercase font-semibold">Down</p>
+                <p class="text-2xl font-bold text-zinc-900 dark:text-zinc-100" id="stat-down">0</p>
+            </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-4 items-center justify-between bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
+            <div class="relative w-full md:w-96">
+                <Icon name="lucide:search" class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500" />
+                <input type="text" id="machine-search" placeholder="Search by name or code..." class="w-full pl-10 pr-4 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-yellow-500 outline-none transition-all text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600" />
+            </div>
+            <button id="btn-new-machine" class="admin-only w-full md:w-auto bg-yellow-500 hover:bg-yellow-400 text-zinc-950 font-bold py-2.5 px-6 rounded-xl transition-all shadow-md active:scale-95">
+                + New Machine
+            </button>
+        </div>
+
+        <div id="machines-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </main>
+
+    <div id="modal-machine" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/60">
+        <div class="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border dark:border-zinc-800">
+            <div class="p-6 border-b dark:border-zinc-800 flex justify-between items-center">
+                <h3 class="text-xl font-bold dark:text-zinc-100" id="modal-title">New Machine</h3>
+                <button type="button" onclick="document.getElementById('modal-machine').classList.add('hidden')" class="text-zinc-400 hover:text-zinc-600">
+                    <Icon name="lucide:x" class="w-5 h-5" />
+                </button>
+            </div>
+            <form id="form-machine" class="p-6 space-y-4">
+                <input type="hidden" id="machine-id" />
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-zinc-500 uppercase mb-1">Asset Code</label>
+                        <input type="text" id="asset_code" required class="w-full px-4 py-2 rounded-lg border dark:border-zinc-800 bg-white dark:bg-zinc-900 dark:text-zinc-100 text-sm" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-zinc-500 uppercase mb-1">Status</label>
+                        <select id="status" class="w-full px-4 py-2 rounded-lg border dark:border-zinc-800 bg-white dark:bg-zinc-900 dark:text-zinc-100 text-sm">
+                            <option value="operational">Operational</option>
+                            <option value="maintenance">In Maintenance</option>
+                            <option value="broken">Down</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-zinc-500 uppercase mb-1">Name</label>
+                    <input type="text" id="name" required class="w-full px-4 py-2 rounded-lg border dark:border-zinc-800 bg-white dark:bg-zinc-900 dark:text-zinc-100 text-sm" />
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-zinc-500 uppercase mb-1">Location</label>
+                        <input type="text" id="location" class="w-full px-4 py-2 rounded-lg border dark:border-zinc-800 bg-white dark:bg-zinc-900 dark:text-zinc-100 text-sm" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-zinc-500 uppercase mb-1">Hourly Cost (€)</label>
+                        <input type="number" step="0.01" id="downtime_hourly_cost" class="w-full px-4 py-2 rounded-lg border dark:border-zinc-800 bg-white dark:bg-zinc-900 dark:text-zinc-100 text-sm" />
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-zinc-900 dark:bg-yellow-500 text-white dark:text-zinc-950 font-bold py-3 rounded-xl">Save</button>
+            </form>
+        </div>
+    </div>
+</Layout>
+
+<script>
+    import { redirectIfNotAuthenticated } from '../lib/auth.js';
+    import { setupUserUI, applyRoleProtections } from '../lib/ui.js';
+    import { initMachinesView } from '../views/maquinas.view.js';
+    import { getUser } from '../lib/auth.js';
+
+    redirectIfNotAuthenticated();
+    setupUserUI(getUser());
+    applyRoleProtections(getUser());
+    initMachinesView();
+</script>
