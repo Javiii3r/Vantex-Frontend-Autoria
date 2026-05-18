@@ -1,40 +1,6 @@
----
-import Layout from '../layouts/Layout.astro';
----
-
-<Layout title="Iniciar Sesión">
-	<div class="flex-1 flex items-center justify-center min-h-screen p-4">
-		
-		<div class="w-full max-w-md bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl relative overflow-hidden">
-			<!-- Resplandor sutil en la parte superior de la tarjeta -->
-			<div class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent opacity-50"></div>
-			
-			<div class="text-center mb-8">
-				<div class="w-16 h-16 bg-gradient-to-tr from-purple-600 to-blue-500 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-purple-500/20 mb-4">
-					<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-						<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-					</svg>
-				</div>
-				<h1 class="text-2xl font-bold text-white tracking-tight">VantexCorp</h1>
-				<p class="text-zinc-400 mt-2 text-sm">Ingresa a tu cuenta para continuar</p>
-			</div>
-
-			<form class="space-y-5" onsubmit="event.preventDefault();">
-				<div>
-					<label class="block text-sm font-medium text-zinc-300 mb-1.5">Correo Electrónico</label>
-					<input type="email" placeholder="tecnico@vantexcorp.com" class="w-full bg-zinc-950/50 border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all">
-				</div>
-				
-				<div>
-					<label class="block text-sm font-medium text-zinc-300 mb-1.5">Contraseña</label>
-					<input type="password" placeholder="••••••••" class="w-full bg-zinc-950/50 border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all">
-				</div>
-
-				<button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-medium rounded-xl px-4 py-3 mt-6 transition-all shadow-lg shadow-purple-500/25 active:scale-[0.98]">
-					Iniciar Sesión
-				</button>
-			</form>
-		</div>
-	</div>
-</Layout>
+<head>
+  <meta http-equiv="refresh" content="0;url=/login" />
+</head>
+<script>
+  window.location.href = "/login";
+</script>

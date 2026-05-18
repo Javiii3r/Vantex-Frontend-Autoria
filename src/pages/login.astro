@@ -1,0 +1,62 @@
+---
+// src/pages/login.astro
+import Layout from '../layouts/Layout.astro';
+import AuthBranding from '../components/AuthBranding.astro';
+---
+
+<Layout title="Login" showSidebar={false}>
+    <div class="flex-1 flex min-h-[calc(100vh-4rem)] lg:min-h-screen">
+        
+        <div class="w-full lg:w-5/12 flex flex-col justify-center px-8 sm:px-16 md:px-24 bg-white/90 backdrop-blur-sm z-10 relative shadow-[20px_0_50px_rgba(0,0,0,0.05)] border-r border-zinc-200">
+            <div class="max-w-md w-full mx-auto">
+                <div class="mb-10 text-center lg:text-left">
+                    <h1 class="text-3xl font-bold text-zinc-900 tracking-tight">Welcome to Vantex</h1>
+                    <p class="text-zinc-500 mt-3 text-sm">Enter your credentials to access the control panel.</p>
+                </div>
+
+                <form id="login-form" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-bold text-zinc-700 mb-2">Email Address</label>
+                        <input 
+                            type="email" 
+                            name="email" 
+                            required 
+                            placeholder="example@vantexcorp.com"
+                            class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-white text-zinc-900 focus:ring-2 focus:ring-yellow-500 outline-none transition-all shadow-sm"/>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-zinc-700 mb-2">Password</label>
+                        <input 
+                            type="password" 
+                            name="password" 
+                            required 
+                            placeholder="••••••••"
+                            class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-white text-zinc-900 focus:ring-2 focus:ring-yellow-500 outline-none transition-all shadow-sm"/>
+                    </div>
+
+                    <button type="submit" class="w-full flex justify-center items-center h-12 bg-yellow-500 hover:bg-yellow-400 text-zinc-950 font-bold rounded-xl px-4 mt-8 transition-colors active:scale-95 shadow-lg shadow-yellow-500/20 disabled:opacity-70">
+                        Login
+                    </button>
+                </form>
+
+                <p class="mt-8 text-center text-sm text-zinc-500">
+                    Don't have an account?
+                    <a href="/register" class="font-bold text-yellow-600 hover:text-yellow-700 transition-colors">Register here</a>
+                </p>
+            </div>
+        </div>
+
+        <AuthBranding
+            badge="CMMS System"
+            title="Intelligent control"
+            titleAccent="for modern industry."
+            description="Manage assets, optimize preventive maintenance and maximize productivity with the leading platform in industrial solutions."/>
+    </div>
+</Layout>
+
+<script>
+    import { initLoginView } from '../views/login.view.js';
+    
+    initLoginView();
+</script>
