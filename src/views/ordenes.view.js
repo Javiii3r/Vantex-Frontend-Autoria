@@ -15,11 +15,14 @@ export async function initOrdersView() {
     await loadDependencies();
     await loadOrders();
     setupEventListeners();
+    
+    // Polling silente cada 5 segundos (KISS real-time)
+    setInterval(() => loadOrders(true), 5000);
 }
 
-async function loadOrders() {
+async function loadOrders(silent = false) {
     const container = document.getElementById('orders-list');
-    if (container) container.innerHTML = `<div class="p-8 text-center text-zinc-500 dark:text-zinc-400">Loading orders...</div>`;
+    if (!silent && container) container.innerHTML = `<div class="p-8 text-center text-zinc-500 dark:text-zinc-400">Loading orders...</div>`;
 
     try {
         const filters = {
@@ -43,7 +46,7 @@ async function loadOrders() {
         });
 
         renderTable();
-    } catch (error) { notify.error("Error loading orders"); }
+    } catch (error) { if (!silent) notify.error("Error loading orders"); }
 }
 
 async function loadDependencies() {
